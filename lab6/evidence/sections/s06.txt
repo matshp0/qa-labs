@@ -1,0 +1,5 @@
+=== 7. default gateway on PC2 ===
+$ ip netns exec pc2 ip route
+default via 10.0.0.1 dev eth0 
+10.0.0.0/24 dev eth0 proto kernel scope link src 10.0.0.16 
+

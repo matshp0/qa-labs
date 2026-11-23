@@ -1,0 +1,4 @@
+=== 8. IP address of PC2 ===
+$ ip netns exec pc2 ip -br addr show eth0
+eth0@if2         UP             10.0.0.16/24 
+

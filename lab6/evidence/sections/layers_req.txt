@@ -1,0 +1,15 @@
+matshp@OmarchyPc:~$ tshark -r session.pcapng -Y 'frame.number==33' -V   # GET / HTTP/1.1 (PC2 -> PC1), стислий вигляд
+Frame 33: Packet, 180 bytes on wire (1440 bits), 180 bytes captured (1440 bits) on interface eth0, id 0
+Ethernet II, Src: 02:00:00:00:00:02 (02:00:00:00:00:02), Dst: 02:00:00:00:00:01 (02:00:00:00:00:01)
+    Destination: 02:00:00:00:00:01 (02:00:00:00:00:01)
+    Source: 02:00:00:00:00:02 (02:00:00:00:00:02)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 10.0.0.16, Dst: 10.0.0.1
+    Total Length: 166
+    Protocol: TCP (6)
+Transmission Control Protocol, Src Port: 50874, Dst Port: 80, Seq: 1, Ack: 1, Len: 114
+    Source Port: 50874
+    Destination Port: 80
+    [TCP Segment Len: 114]
+Hypertext Transfer Protocol
+[Full request URI: http://10.0.0.1/]

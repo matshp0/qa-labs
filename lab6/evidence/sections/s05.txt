@@ -1,0 +1,18 @@
+=== 5. dhclient on PC2 ===
+Internet Systems Consortium DHCP Client 4.4.3-P1
+Copyright 2004-2022 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+dhclient reason=PREINIT
+Listening on LPF/eth0/02:00:00:00:00:02
+Sending on   LPF/eth0/02:00:00:00:00:02
+Sending on   Socket/fallback
+Created duid "\000\001\000\0012\226\364\331\002\000\000\000\000\002".
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 5
+DHCPOFFER of 10.0.0.16 from 10.0.0.1
+DHCPREQUEST for 10.0.0.16 on eth0 to 255.255.255.255 port 67
+DHCPACK of 10.0.0.16 from 10.0.0.1
+LEASE: ip=10.0.0.16 mask=255.255.255.0 router=10.0.0.1 dns=8.8.8.8 lease=600s server=10.0.0.1
+bound to 10.0.0.16 -- renewal in 256 seconds.
+

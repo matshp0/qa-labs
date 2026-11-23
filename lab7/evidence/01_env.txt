@@ -1,0 +1,13 @@
+matshp@lab7-client:/lab$ date; whoami
+Mon Nov 23 12:55:54 UTC 2026
+matshp
+matshp@lab7-client:/lab$ iperf3 --version | head -1; python3 --version; pytest --version; python3 -c 'import paramiko; print("paramiko", paramiko.__version__)'; ls
+iperf 3.12 (cJSON 1.7.15)
+Python 3.11.2
+pytest 9.2.0
+paramiko 5.1.0
+conftest.py
+iperf_client.py
+iperf_test.py
+parser.py
+test_parser.py

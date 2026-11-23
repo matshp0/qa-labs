@@ -1,0 +1,48 @@
+=== HTTP session: web server on PC1, request from PC2 ===
+$ ip netns exec pc1 ip neigh flush all
+
+$ ip netns exec pc2 ip neigh flush all
+
+(ARP caches cleared on both PCs, so ARP is visible again before the HTTP request)
+$ ip netns exec pc2 curl -s -v --compressed --max-time 5 http://10.0.0.1/ http://10.0.0.1/second
+*   Trying 10.0.0.1:80...
+* Established connection to 10.0.0.1 (10.0.0.1 port 80) from 10.0.0.16 port 50874 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: 10.0.0.1
+> User-Agent: curl/8.23.0
+> Accept: */*
+> Accept-Encoding: deflate, gzip, br, zstd
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Server: BaseHTTP/0.6 Python/3.14.8
+< Date: Mon, 23 Nov 2026 12:58:07 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Encoding: gzip
+< Content-Length: 194
+< Connection: keep-alive
+< 
+{ [194 bytes data]
+* Connection #0 to host 10.0.0.1:80 left intact
+<html><head><title>Router</title></head><body><h1>Роутер PC1</h1><p>Привіт від веб-сервера PC1! Це тестова сторінка для лабораторної роботи №6.</p></body></html>
+* Reusing existing http: connection with host 10.0.0.1
+> GET /second HTTP/1.1
+> Host: 10.0.0.1
+> User-Agent: curl/8.23.0
+> Accept: */*
+> Accept-Encoding: deflate, gzip, br, zstd
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Server: BaseHTTP/0.6 Python/3.14.8
+< Date: Mon, 23 Nov 2026 12:58:07 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Encoding: gzip
+< Content-Length: 194
+< Connection: keep-alive
+< 
+{ [194 bytes data]
+* Connection #0 to host 10.0.0.1:80 left intact
+<html><head><title>Router</title></head><body><h1>Роутер PC1</h1><p>Привіт від веб-сервера PC1! Це тестова сторінка для лабораторної роботи №6.</p></body></html>
+

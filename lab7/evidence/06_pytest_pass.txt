@@ -1,0 +1,12 @@
+matshp@lab7-client:/lab$ date; whoami
+Mon Nov 23 12:56:15 UTC 2026
+matshp
+matshp@lab7-client:/lab$ pytest -v iperf_test.py -p no:cacheprovider
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.2.0, pluggy-1.7.0 -- /opt/venv/bin/python3
+rootdir: /lab
+collecting ... collected 1 item
+
+iperf_test.py::TestSuite::test_iperf3_client_connection PASSED           [100%]
+
+============================== 1 passed in 6.23s ===============================

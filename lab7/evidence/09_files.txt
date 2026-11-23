@@ -1,0 +1,17 @@
+matshp@lab7-client:/lab$ date; whoami
+Mon Nov 23 12:56:30 UTC 2026
+matshp
+matshp@lab7-client:/lab$ ls -l; wc -l conftest.py parser.py iperf_test.py iperf_client.py test_parser.py
+total 20
+drwxr-xr-x 1 matshp matshp  276 Nov 23 12:56 __pycache__
+-rw-r--r-- 1 matshp matshp 2367 Nov 23 12:53 conftest.py
+-rw-r--r-- 1 matshp matshp  922 Nov 23 12:53 iperf_client.py
+-rw-r--r-- 1 matshp matshp 1157 Nov 23 12:53 iperf_test.py
+-rw-r--r-- 1 matshp matshp 1613 Nov 23 12:53 parser.py
+-rw-r--r-- 1 matshp matshp 1402 Nov 23 12:53 test_parser.py
+  41 conftest.py
+  34 parser.py
+  23 iperf_test.py
+  24 iperf_client.py
+  30 test_parser.py
+ 152 total

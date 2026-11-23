@@ -1,0 +1,113 @@
+Користувач: matshp (група ІМ-34), хост: OmarchyPc
+Дата: 2026-11-23 14:57:59 EET
+
+=== 1. PC1 and PC2 connected by Ethernet (veth) ===
+$ ip -n pc1 -br link show eth0
+eth0@if2         UP             02:00:00:00:00:01 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+
+$ ip -n pc2 -br link show eth0
+eth0@if2         UP             02:00:00:00:00:02 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+
+=== 2. DHCP server on PC1 (dnsmasq) ===
+dhcp-range=10.0.0.10,10.0.0.20,255.255.255.0,600s
+dhcp-option=option:router,10.0.0.1
+dhcp-option=option:dns-server,8.8.8.8
+
+=== 3. NAT on PC1 ===
+$ ip netns exec pc1 sysctl -w net.ipv4.ip_forward=1
+net.ipv4.ip_forward = 1
+
+$ ip netns exec pc1 iptables -t nat -A POSTROUTING -o wan0 -s 10.0.0.0/24 -j MASQUERADE
+
+$ ip netns exec pc1 iptables -t nat -L POSTROUTING -n
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination         
+MASQUERADE  all  --  10.0.0.0/24          0.0.0.0/0           
+
+=== 4. Wireshark (tshark) capture on PC1 eth0 ===
+=== 5. dhclient on PC2 ===
+Internet Systems Consortium DHCP Client 4.4.3-P1
+Copyright 2004-2022 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+dhclient reason=PREINIT
+Listening on LPF/eth0/02:00:00:00:00:02
+Sending on   LPF/eth0/02:00:00:00:00:02
+Sending on   Socket/fallback
+Created duid "\000\001\000\0012\226\364\331\002\000\000\000\000\002".
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 5
+DHCPOFFER of 10.0.0.16 from 10.0.0.1
+DHCPREQUEST for 10.0.0.16 on eth0 to 255.255.255.255 port 67
+DHCPACK of 10.0.0.16 from 10.0.0.1
+LEASE: ip=10.0.0.16 mask=255.255.255.0 router=10.0.0.1 dns=8.8.8.8 lease=600s server=10.0.0.1
+bound to 10.0.0.16 -- renewal in 256 seconds.
+
+=== 7. default gateway on PC2 ===
+$ ip netns exec pc2 ip route
+default via 10.0.0.1 dev eth0 
+10.0.0.0/24 dev eth0 proto kernel scope link src 10.0.0.16 
+
+=== 8. IP address of PC2 ===
+$ ip netns exec pc2 ip -br addr show eth0
+eth0@if2         UP             10.0.0.16/24 
+
+=== 9. ping PC2 from PC1 ===
+$ ip netns exec pc1 ping -c 2 -W 1 10.0.0.16
+PING 10.0.0.16 (10.0.0.16) 56(84) bytes of data.
+64 bytes from 10.0.0.16: icmp_seq=1 ttl=64 time=0.043 ms
+64 bytes from 10.0.0.16: icmp_seq=2 ttl=64 time=0.038 ms
+
+--- 10.0.0.16 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1005ms
+rtt min/avg/max/mdev = 0.038/0.040/0.043/0.002 ms
+
+=== HTTP session: web server on PC1, request from PC2 ===
+$ ip netns exec pc1 ip neigh flush all
+
+$ ip netns exec pc2 ip neigh flush all
+
+(ARP caches cleared on both PCs, so ARP is visible again before the HTTP request)
+$ ip netns exec pc2 curl -s -v --compressed --max-time 5 http://10.0.0.1/ http://10.0.0.1/second
+*   Trying 10.0.0.1:80...
+* Established connection to 10.0.0.1 (10.0.0.1 port 80) from 10.0.0.16 port 50874 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: 10.0.0.1
+> User-Agent: curl/8.23.0
+> Accept: */*
+> Accept-Encoding: deflate, gzip, br, zstd
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Server: BaseHTTP/0.6 Python/3.14.8
+< Date: Mon, 23 Nov 2026 12:58:07 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Encoding: gzip
+< Content-Length: 194
+< Connection: keep-alive
+< 
+{ [194 bytes data]
+* Connection #0 to host 10.0.0.1:80 left intact
+<html><head><title>Router</title></head><body><h1>Роутер PC1</h1><p>Привіт від веб-сервера PC1! Це тестова сторінка для лабораторної роботи №6.</p></body></html>
+* Reusing existing http: connection with host 10.0.0.1
+> GET /second HTTP/1.1
+> Host: 10.0.0.1
+> User-Agent: curl/8.23.0
+> Accept: */*
+> Accept-Encoding: deflate, gzip, br, zstd
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Server: BaseHTTP/0.6 Python/3.14.8
+< Date: Mon, 23 Nov 2026 12:58:07 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Encoding: gzip
+< Content-Length: 194
+< Connection: keep-alive
+< 
+{ [194 bytes data]
+* Connection #0 to host 10.0.0.1:80 left intact
+<html><head><title>Router</title></head><body><h1>Роутер PC1</h1><p>Привіт від веб-сервера PC1! Це тестова сторінка для лабораторної роботи №6.</p></body></html>
+
+=== captured packets ===

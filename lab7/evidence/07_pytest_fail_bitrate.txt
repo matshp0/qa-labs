@@ -1,0 +1,35 @@
+matshp@lab7-client:/lab$ date; whoami
+Mon Nov 23 12:56:22 UTC 2026
+matshp
+matshp@lab7-client:/lab$ LAB7_BITRATE=10M pytest -v iperf_test.py -p no:cacheprovider
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.2.0, pluggy-1.7.0 -- /opt/venv/bin/python3
+rootdir: /lab
+collecting ... collected 1 item
+
+iperf_test.py::TestSuite::test_iperf3_client_connection FAILED           [100%]
+
+=================================== FAILURES ===================================
+___________________ TestSuite.test_iperf3_client_connection ____________________
+
+self = <iperf_test.TestSuite object at 0x7f537f5b1710>
+client = ('Connecting to host lab7-server, port 5201\n[  5] local 172.29.0.3 port 40766 connected to 172.29.0.2 port 5201\n[ ID...          sender\n[  5]   0.00-5.00   sec  6.00 MBytes  10.1 Mbits/sec                  receiver\n\niperf Done.\n', '')
+
+    def test_iperf3_client_connection(self, client):
+        """TC-7.1: перевіряємо, що клієнт не повертає помилку, а кожен інтервал iperf3
+        має Transfer > 2 MBytes і Bitrate > 20 Mbits/sec.
+        :param client: фікстура клієнта -> (stdout, stderr)"""
+        out, err = client
+        assert err == '', f'iperf3-клієнт повернув помилку: {err.strip()}'
+        intervals = parser.parser(out)
+        assert intervals, 'у виводі iperf3 немає жодного інтервалу'
+        for value in intervals:
+>           assert value['Transfer'] > MIN_TRANSFER, (
+                f"інтервал {value['Interval']}: Transfer {value['Transfer']} MB <= {MIN_TRANSFER} MB")
+E           AssertionError: інтервал 0.00-1.00: Transfer 1.25 MB <= 2.0 MB
+E           assert 1.25 > 2.0
+
+iperf_test.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED iperf_test.py::TestSuite::test_iperf3_client_connection - AssertionErr...
+============================== 1 failed in 6.24s ===============================

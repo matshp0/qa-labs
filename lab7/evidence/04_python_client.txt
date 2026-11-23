@@ -1,0 +1,9 @@
+matshp@lab7-client:/lab$ date; whoami
+Mon Nov 23 12:56:10 UTC 2026
+matshp
+matshp@lab7-client:/lab$ python3 iperf_client.py lab7-server
+{'Interval': '0.00-1.00', 'Transfer': 2334.72, 'Bitrate': 19600.0, 'Retr': 0.0, 'Cwnd': 277.0}
+{'Interval': '1.00-2.00', 'Transfer': 2201.6, 'Bitrate': 18400.0, 'Retr': 0.0, 'Cwnd': 365.0}
+{'Interval': '2.00-3.00', 'Transfer': 2170.88, 'Bitrate': 18200.0, 'Retr': 0.0, 'Cwnd': 362.0}
+{'Interval': '3.00-4.00', 'Transfer': 2314.24, 'Bitrate': 19400.0, 'Retr': 0.0, 'Cwnd': 385.0}
+{'Interval': '4.00-5.00', 'Transfer': 2375.68, 'Bitrate': 19900.0, 'Retr': 0.0, 'Cwnd': 404.0}
